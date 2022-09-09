@@ -1,5 +1,5 @@
 # PsiMed
-<h1>Sistema para clínicas psiquiátricas</h1>
+<h2>Sistema para clínicas psiquiátricas</h2>
 
 <p>
   Nosso sistema deverá focar no agendamento de consultas, bem como controle de prescrições médicas que apenas poderão ser inseridas pelo médico que atendeu um paciente específico.
