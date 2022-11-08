@@ -13,6 +13,7 @@ app.get('/paciente', (req, res) => {
 });
 
 app.get('/paciente/:id', (req, res) => {
+    const cpf = req.params.id;
     res.status(200).send(pacientes[cpf]);
 });
 
