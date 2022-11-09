@@ -1,0 +1,24 @@
+{
+  "name": "psimed",
+  "version": "1.0.0",
+  "description": "<h2>Sistema para clínicas psiquiátricas</h2>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrielGalvao2000/PsiMed.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GabrielGalvao2000/PsiMed/issues"
+  },
+  "homepage": "https://github.com/GabrielGalvao2000/PsiMed#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "mysql2": "^2.3.3"
+  }
+}

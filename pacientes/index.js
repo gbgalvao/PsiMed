@@ -1,45 +1,64 @@
-const express = require('express');
+require("dotenv").config();
+const express = require("express");
+const bodyParser = require("body-parser");
+const { default: axios } = require("axios");
+const mysql = require("mysql2");
 const app = express();
+app.use(express.json());
+
 var pacientes = {};
-const bodyParser = require('body-parser');
-const { default: axios } = require('axios');
-app.use(bodyParser.json());
-contador = 0;
-const consultaPorpacientesId = {};
-//const { v4: uuidv4 } = require('uuid');
 
-app.get('/paciente', (req, res) => {
-    res.status(200).send(pacientes);
+const { DB_HOST, DB_DATABASE, DB_USER, DB_PASSWORD } = process.env;
+const pool = mysql.createPool({
+  host: DB_HOST,
+  database: DB_DATABASE,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  //se todas as conexões estiverem ocupadas, novos solicitantes esperam numa fila
+  //se configurado com false, causa um erro quando recebe requisições e todas
+  //as conexões estão ocupadas
+  waitForConnections: true,
+  //no máximo 10 conexões. Elas são abertas sob demanda e não no momento de
+  //construção do pool
+  connectionLimit: 10,
+  //quantos solicitantes podem aguardar na fila? 0 significa que não há limite
+  queueLimit: 0
 });
 
-app.get('/paciente/:id', (req, res) => {
-    const cpf = req.params.id;
+app.get("/paciente", (req, res) => {
+  pool.query("SELECT * FROM tb_paciente", (err, results, fields) => {
+    res.json(results);
+    console.log(results);
+  });
+});
+
+app.get("/paciente/:id", (req, res) => {
+  const cpf = req.params.id;
+  pool.query("SELECT * FROM tb_paciente WHERE cpf", (err, results, fields) => {
     res.status(200).send(pacientes[cpf]);
+  });
 });
 
-app.put('/paciente', async (req, res) => {
-    const { cpf, nome, idade } = req.body;
-    pacientes[cpf] = {
-        cpf, nome, idade
-    }
-    
-    await axios.post("http://localhost:10000/eventos", {
-        tipo: "ClienteCadastrado"
-        /*
-        dados: {
-            cpf,
-            nome,
-            idade
-        },
-        */
-    })    
-    
+app.post("/paciente", (req, res) => {
+  const cpf = req.body.cpf;
+  const nome = req.body.nome;
+  const idade = req.body.idade;
 
-    res.status(201).send(pacientes[cpf]);
+  const sql = "INSERT INTO tb_paciente (cpf, nome, idade) VALUES (?, ?, ?)";
+  pool.query(sql, (err, results, fields) => {
+    res.json(results);
+  });
 });
 
+app.put("/paciente", async (req, res) => {
+  const { cpf, nome, idade } = req.body;
+  pacientes[cpf] = {
+    cpf,
+    nome,
+    idade,
+  };
+  res.status(201).send(pacientes[cpf]);
+});
 
-
-app.listen(4000, (() => {
-    console.log('Pacientes. Porta 4000');
-}));
+const porta = 4000;
+app.listen(porta, () => console.log(`Executando. Porta ${porta}`));
