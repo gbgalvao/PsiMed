@@ -1,26 +1,46 @@
+require("dotenv").config();
 const express = require("express");
-const app = express();
 const bodyParser = require("body-parser");
-app.use(bodyParser.json());
-var consultas = {};
+const { default: axios } = require("axios");
+const mysql = require("mysql2");
+const app = express();
+app.use(express.json());
 
-app.put("/consulta/:paciente", (req, res) => {
-  const { data, medico } = req.body;
-  consultas[req.params.paciente] = {
-    data,
-    medico,
-  };
-  res.status(201).send(consultas[req.params.paciente]);
+
+const { DB_HOST, DB_DATABASE, DB_USER, DB_PASSWORD } = process.env;
+const pool = mysql.createPool({
+  host: DB_HOST,
+  database: DB_DATABASE,
+  user: DB_USER,
+  password: DB_PASSWORD,
+  //se todas as conexões estiverem ocupadas, novos solicitantes esperam numa fila
+  //se configurado com false, causa um erro quando recebe requisições e todas
+  //as conexões estão ocupadas
+  waitForConnections: true,
+  //no máximo 10 conexões. Elas são abertas sob demanda e não no momento de
+  //construção do pool
+  connectionLimit: 10,
+  //quantos solicitantes podem aguardar na fila? 0 significa que não há limite
+  queueLimit: 0
+});
+
+app.post("/consulta", (req, res) => {
+  const cpf = req.body.cpf;
+  const crm = req.body.crm;
+  const dataHora = req.body.dataHora;
+
+  const sql = "INSERT INTO tb_consulta (cpf, crm, dataHora) VALUES (?, ?, ?)";
+  pool.query(sql, [cpf, crm, dataHora], (err, results, fields) => {
+    res.json(results);
+  });
 });
 
 app.get("/consulta", (req, res) => {
-  res.status(200).send(consultas);
+  pool.query("SELECT * FROM tb_consulta", (err, results, fields) => {
+    res.json(results);
+    console.log(results);
+  });
 });
 
-app.get("/consulta/:id/paciente", (req, res) => {
-  res.status(200).send(consultas[req.params.id]);
-});
-
-app.listen(5000, () => {
-  console.log("Pacientes. Porta 5000");
-});
+const porta = 6000;
+app.listen(porta, () => console.log(`Executando. Porta ${porta}`));
