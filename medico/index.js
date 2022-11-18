@@ -26,21 +26,10 @@ const pool = mysql.createPool({
 
 
 app.post("/medico", (req, res) => {
-    const crm = req.body.crm;
-    const nome = req.body.nome;
-  
-    const sql = "INSERT INTO tb_medico (crm, nome) VALUES (?, ?)";
-    pool.query(sql, [crm, nome], (err, results, fields) => {
-      res.json(results);
-    });
-  });
+});
 
-  app.get("/medico", (req, res) => {
-    pool.query("SELECT * FROM tb_medico", (err, results, fields) => {
-      res.json(results);
-      console.log(results);
-    });
-  });
+app.get("/medico", (req, res) => {
+});
 
 const porta = 5000;
 app.listen(porta, () => console.log(`Executando. Porta ${porta}`));

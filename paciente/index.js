@@ -24,31 +24,13 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-app.get("/paciente", (req, res) => {
-  pool.query("SELECT * FROM tb_paciente", (err, results, fields) => {
-    res.json(results);
-    console.log(results);
-  });
+
+app.post("/paciente", (req, res) => { 
 });
 
 app.get("/paciente/:id", (req, res) => {
-  const cpf = req.params.id;
-  pool.query("SELECT * FROM tb_paciente WHERE cpf", (err, results, fields) => {
-    res.status(200).send(pacientes[cpf]);
-  });
-});
-
-app.post("/paciente", (req, res) => {
-  const cpf = req.body.cpf;
-  const nome = req.body.nome;
-  const idade = req.body.idade;
-
-  const sql = "INSERT INTO tb_paciente (cpf, nome, idade) VALUES (?, ?, ?)";
-  pool.query(sql, [cpf, nome, idade], (err, results, fields) => {
-    res.json(results);
-  });
 });
 
 
-const porta = 4000;
+const porta = 6000;
 app.listen(porta, () => console.log(`Executando. Porta ${porta}`));
