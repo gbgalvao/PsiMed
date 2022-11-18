@@ -1,0 +1,23 @@
+<mat-card>
+    <mat-card-title>Agendamento</mat-card-title>
+    <form>
+        <mat-form-field>
+            <input  matInput placeholder="Nome" [(ngModel)]="cadastros.name" name='name'>
+        </mat-form-field>
+        <mat-form-field>
+            <input  matInput placeholder="Idade" [(ngModel)]="cadastros.idade" name="idade">
+        </mat-form-field>
+        <mat-form-field>
+            <input  matInput placeholder="Cpf" [(ngModel)]="cadastros.cpf" name="cpf">
+        </mat-form-field>
+    </form>
+
+    <button class="save" mat-raised-button (click)="createCadastro()">
+        Salvar
+    </button>
+    <button mat-raised-button (click)="cancel()">
+        Cancelar
+    </button>
+
+</mat-card>
+

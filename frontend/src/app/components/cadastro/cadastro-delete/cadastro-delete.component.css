@@ -1,0 +1,13 @@
+.delete {
+    background-color: var(--primeira-color);
+    color: #FFF;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    margin: 20px 15px 0px 0px;
+}
