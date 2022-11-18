@@ -27,10 +27,10 @@ const pool = mysql.createPool({
 app.post("/consulta", (req, res) => {
   const cpf = req.body.cpf;
   const crm = req.body.crm;
-  const dataHora = req.body.dataHora;
+  const data_hora = req.body.data_hora;
 
-  const sql = "INSERT INTO tb_consulta (cpf, crm, dataHora) VALUES (?, ?, ?)";
-  pool.query(sql, [cpf, crm, dataHora], (err, results, fields) => {
+  const sql = "INSERT INTO tb_consulta (cpf, crm, data_hora) VALUES (?, ?, ?)";
+  pool.query(sql, [cpf, crm, data_hora], (err, results, fields) => {
     res.json(results);
   });
 });
