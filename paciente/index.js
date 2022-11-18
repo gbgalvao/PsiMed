@@ -25,12 +25,17 @@ const pool = mysql.createPool({
 });
 
 
-app.post("/paciente", (req, res) => { 
+app.post("/paciente/:id/consulta", (req, res) => {
+  
 });
 
-app.get("/paciente/:id", (req, res) => {
+app.get("/paciente", (req, res) => {
 });
 
+app.post("/eventos", (req, res) => {
+  console.log(req.body);
+  res.status(200).send({ msg: "ok" });
+});
 
 const porta = 6000;
 app.listen(porta, () => console.log(`Executando. Porta ${porta}`));

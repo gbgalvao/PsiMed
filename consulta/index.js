@@ -42,5 +42,10 @@ app.get("/consulta", (req, res) => {
   });
 });
 
-const porta = 6000;
+app.post("/eventos", (req, res) => {
+  console.log(req.body);
+  res.status(200).send({ msg: "ok" });
+});
+
+const porta = 7000;
 app.listen(porta, () => console.log(`Executando. Porta ${porta}`));

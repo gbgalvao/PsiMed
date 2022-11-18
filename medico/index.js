@@ -31,5 +31,10 @@ app.post("/medico", (req, res) => {
 app.get("/medico", (req, res) => {
 });
 
+app.post("/eventos", (req, res) => {
+  console.log(req.body);
+  res.status(200).send({ msg: "ok" });
+});
+
 const porta = 5000;
 app.listen(porta, () => console.log(`Executando. Porta ${porta}`));

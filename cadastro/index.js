@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
-const { default: axios } = require("axios");
+const axios = require("axios");
 const mysql = require("mysql2");
 const app = express();
 app.use(express.json());
@@ -25,7 +25,7 @@ const pool = mysql.createPool({
 });
 
 //cadastro de paciente
-app.post("/paciente", (req, res) => {
+app.post("/paciente", async (req, res) => {
     const cpf = req.body.cpf;
     const nome = req.body.nome;
     const idade = req.body.idade;
@@ -33,6 +33,15 @@ app.post("/paciente", (req, res) => {
     const sql = "INSERT INTO tb_paciente (cpf, nome, idade) VALUES (?, ?, ?)";
     pool.query(sql, [cpf, nome, idade], (err, results, fields) => {
         res.json(results);
+    });
+
+    await axios.post("http://localhost:10000/eventos", {
+        tipo: "PacienteCadastrado",
+        dados: {
+        cpf,
+        nome,
+        idade,
+        },
     });
 });
 
@@ -59,6 +68,11 @@ app.get("/medico", (req, res) => {
         res.json(results);
         console.log(results);
     });
+});
+
+app.post("/eventos", (req, res) => {
+    console.log(req.body);
+    res.status(200).send({ msg: "ok" });
 });
 
 const porta = 4000;
