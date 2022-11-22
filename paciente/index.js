@@ -24,22 +24,22 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-app.get("/paciente", async (req, res) => {
-    const paciente_id = req.body.paciente_id;
-    const cpf = req.body.cpf;
-    const nome = req.body.nome;
-    const idade = req.body.idade;
+app.put("/paciente/:id", async (req, res) => {
+    const paciente_id = req.params.id;
+    const medico_id = req.body.medico_id;
+    const dataCon = req.body.dataCon;
+    const hora = req.body.hora;
 
-  await axios.get('http://localhost:1000/eventos', {
+  await axios.post('http://localhost:7000/consulta', {
     dados: {
       paciente_id,
-      cpf,
-      nome,
-      idade,
+      medico_id,
+      dataCon,
+      hora,
     }
   })
-  .then(function (eventos){
-    console.log(eventos);
+  .then(function (err){
+    console.log(err);
   })    
 });
 

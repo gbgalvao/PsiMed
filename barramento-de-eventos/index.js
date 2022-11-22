@@ -24,10 +24,7 @@ app.post('/eventos', (req, res) => {
  });
 
  app.get('/eventos', (req,res) =>{
-   const evento = req.body;
-   //envia o evento para o microsserviço de paciente
-   axios.get('http://localhost:2000/eventos', evento);
-   res.json(evento);
+   console.log(evento);
  })
 
  const porta = 1000;
