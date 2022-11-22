@@ -24,21 +24,42 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-app.post("/consulta", (req, res) => {
-  const cpf = req.body.cpf;
-  const crm = req.body.crm;
-  const data_hora = req.body.data_hora;
+app.post("/consulta", async (req, res) => {
+  var consulta_id = Math.floor(Math.random() * 10000);
+  var medico_id = req.body.medico_id;
+  var paciente_id = req.body.paciente_id;
+  var dataCon = req.body.dataCon;
+  var hora = req.body.hora;
 
-  const sql = "INSERT INTO tb_consulta (cpf, crm, data_hora) VALUES (?, ?, ?)";
-  pool.query(sql, [cpf, crm, data_hora], (err, results, fields) => {
+  const sql = "INSERT INTO tb_consulta (consulta_id, medico_id, paciente_id, dataCon, hora) VALUES (?, ?, ?, ?, ?)";
+  pool.query(sql, [consulta_id, medico_id, paciente_id, dataCon, hora], (err, results, fields) => {
     res.json(results);
   });
+
+  await axios.post("http://localhost:1000/eventos", {
+        tipo: "ConsultaInserida",
+        dados: {
+        consulta_id,
+        medico_id,    
+        paciente_id,
+        dataCon,
+        hora
+        },
+    });
 });
 
 app.get("/consulta", (req, res) => {
   pool.query("SELECT * FROM tb_consulta", (err, results, fields) => {
     res.json(results);
     console.log(results);
+  });
+});
+
+app.get("/consulta/:id", async (req, res) => {
+  var consulta_id = req.params.id;
+  pool.query("SELECT * FROM tb_consulta WHERE consulta_id=" + mysql.escape(consulta_id), (err, results, fields) => {
+      res.json(results);
+      console.log(results);
   });
 });
 

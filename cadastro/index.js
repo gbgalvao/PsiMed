@@ -26,18 +26,20 @@ const pool = mysql.createPool({
 
 //cadastro de paciente
 app.post("/paciente", async (req, res) => {
+    const paciente_id = Math.floor(Math.random() * 10000);
     const cpf = req.body.cpf;
     const nome = req.body.nome;
     const idade = req.body.idade;
 
-    const sql = "INSERT INTO tb_paciente (cpf, nome, idade) VALUES (?, ?, ?)";
-    pool.query(sql, [cpf, nome, idade], (err, results, fields) => {
+    const sql = "INSERT INTO tb_paciente (paciente_id, cpf, nome, idade) VALUES (?, ?, ?, ?)";
+    pool.query(sql, [paciente_id, cpf, nome, idade], (err, results, fields) => {
         res.json(results);
     });
-
-    await axios.post("http://localhost:10000/eventos", {
+    
+    await axios.post("http://localhost:1000/eventos", {
         tipo: "PacienteCadastrado",
         dados: {
+        paciente_id,    
         cpf,
         nome,
         idade,
@@ -52,19 +54,45 @@ app.get("/paciente", (req, res) => {
     });
 });
 
+app.get("/paciente/:id", async (req, res) => {
+    var paciente_id = req.params.id;
+    pool.query("SELECT * FROM tb_paciente WHERE paciente_id=" + mysql.escape(paciente_id), (err, results, fields) => {
+        res.json(results);
+        console.log(results);
+    });
+});
+
 //cadastro de médicos
-app.post("/medico", (req, res) => {
+app.post("/medico", async (req, res) => {
+    const medico_id = Math.floor(Math.random() * 10000);
     const crm = req.body.crm;
     const nome = req.body.nome;
 
-    const sql = "INSERT INTO tb_medico (crm, nome) VALUES (?, ?)";
-    pool.query(sql, [crm, nome], (err, results, fields) => {
+    const sql = "INSERT INTO tb_medico (medico_id, crm, nome) VALUES (?, ?, ?)";
+    pool.query(sql, [medico_id, crm, nome], (err, results, fields) => {
         res.json(results);
+    });
+
+    await axios.post("http://localhost:1000/eventos", {
+        tipo: "MedicoCadastrado",
+        dados: {
+        medico_id,    
+        crm,
+        nome,
+        },
     });
 });
 
 app.get("/medico", (req, res) => {
     pool.query("SELECT * FROM tb_medico", (err, results, fields) => {
+        res.json(results);
+        console.log(results);
+    });
+});
+
+app.get("/medico/:id", (req, res) => {
+    var medico_id = req.params.id;
+    pool.query("SELECT * FROM tb_medico WHERE medico_id=" + mysql.escape(medico_id), (err, results, fields) => {
         res.json(results);
         console.log(results);
     });

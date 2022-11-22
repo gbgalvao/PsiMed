@@ -24,9 +24,23 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
+app.get("/paciente", async (req, res) => {
+    const paciente_id = req.body.paciente_id;
+    const cpf = req.body.cpf;
+    const nome = req.body.nome;
+    const idade = req.body.idade;
 
-app.post("/paciente/:id/consulta", (req, res) => {
-  
+  await axios.get('http://localhost:1000/eventos', {
+    dados: {
+      paciente_id,
+      cpf,
+      nome,
+      idade,
+    }
+  })
+  .then(function (eventos){
+    console.log(eventos);
+  })    
 });
 
 app.get("/paciente", (req, res) => {
@@ -37,5 +51,5 @@ app.post("/eventos", (req, res) => {
   res.status(200).send({ msg: "ok" });
 });
 
-const porta = 6000;
+const porta = 2000;
 app.listen(porta, () => console.log(`Executando. Porta ${porta}`));

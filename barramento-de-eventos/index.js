@@ -16,7 +16,7 @@ app.post('/eventos', (req, res) => {
    //envia o evento para o microsserviço de medico
    axios.post('http://localhost:5000/eventos', evento);
    //envia o evento para o microsserviço de paciente
-   axios.post('http://localhost:6000/eventos', evento);
+   axios.post('http://localhost:2000/eventos', evento);
    //envia o evento para o microsserviço de consulta
    axios.post('http://localhost:7000/eventos', evento);
 
@@ -24,9 +24,11 @@ app.post('/eventos', (req, res) => {
  });
 
  app.get('/eventos', (req,res) =>{
-    res.send(eventos)
+   const evento = req.body;
+   //envia o evento para o microsserviço de paciente
+   axios.get('http://localhost:2000/eventos', evento);
+   res.json(evento);
  })
 
- app.listen(10000, () => {
- console.log('Barramento de eventos. Porta 10000.')
- })
+ const porta = 1000;
+ app.listen(porta, () => console.log(`Executando. Porta ${porta}`));
