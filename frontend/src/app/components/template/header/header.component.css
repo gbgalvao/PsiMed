@@ -1,0 +1,23 @@
+
+.header {
+    align-items: center;
+    background-color: var(--primeira-color);
+    display: flex;
+    justify-content: center;
+}
+
+.header a {
+    color: #fff;
+}
+
+i {
+    font-size: 50px;
+    padding-right: 5px;
+    padding-top: 10px;
+}
+
+span {
+    color: #fff;
+    font-size: 26px;
+}
+

@@ -1,0 +1,22 @@
+<mat-card>
+    <mat-card-title>Excluir Cadastro</mat-card-title>
+    <form>
+        <mat-form-field>
+            <input  matInput placeholder="Nome" [value]="cadastros.name" name='name' disabled>
+        </mat-form-field>
+        <mat-form-field>
+            <input  matInput placeholder="Idade" [value]="cadastros.idade" name="idade" disabled>
+        </mat-form-field>
+        <mat-form-field>
+            <input  matInput placeholder="Cpf" [value]="cadastros.cpf" name="cpf" disabled>
+        </mat-form-field>
+    </form>
+
+    <button class="delete" mat-raised-button (click)="deleteCadastro()">
+        Excluir
+    </button>
+    <button mat-raised-button (click)="cancel()">
+        Cancelar
+    </button>
+
+</mat-card>

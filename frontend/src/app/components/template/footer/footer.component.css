@@ -1,0 +1,21 @@
+.footer {
+    position: fixed;
+    bottom: 0;
+    background-color: rgb(244, 244, 244);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.footer span {
+    font-size: 1.1rem;
+    font-weight: 300;
+    font-size: 14px;
+    color: black;
+}
+
+.footer a img{
+    max-width: 30px;
+    max-height: 30px;
+    padding-left: 10px;
+    display: block;
+}
