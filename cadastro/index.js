@@ -13,20 +13,14 @@ const pool = mysql.createPool({
     database: DB_DATABASE,
     user: DB_USER,
     password: DB_PASSWORD,
-    //se todas as conexões estiverem ocupadas, novos solicitantes esperam numa fila
-    //se configurado com false, causa um erro quando recebe requisições e todas
-    //as conexões estão ocupadas
     waitForConnections: true,
-    //no máximo 10 conexões. Elas são abertas sob demanda e não no momento de
-    //construção do pool
     connectionLimit: 10,
-    //quantos solicitantes podem aguardar na fila? 0 significa que não há limite
     queueLimit: 0
 });
 
-//cadastro de paciente
+//Cadastro de paciente
 app.post("/paciente", async (req, res) => {
-    const paciente_id = Math.floor(Math.random() * 10000);
+    const paciente_id = Math.floor(Math.random() * 10000);//Gera ID do paciente
     const cpf = req.body.cpf;
     const nome = req.body.nome;
     const idade = req.body.idade;
@@ -47,6 +41,7 @@ app.post("/paciente", async (req, res) => {
     });
 });
 
+//Consulta de todos pacientes cadastrados
 app.get("/paciente", (req, res) => {
     pool.query("SELECT * FROM tb_paciente", (err, results, fields) => {
         res.json(results);
@@ -54,6 +49,7 @@ app.get("/paciente", (req, res) => {
     });
 });
 
+//Consulta de pacientes por ID
 app.get("/paciente/:id", async (req, res) => {
     var paciente_id = req.params.id;
     pool.query("SELECT * FROM tb_paciente WHERE paciente_id=" + mysql.escape(paciente_id), (err, results, fields) => {
@@ -62,9 +58,9 @@ app.get("/paciente/:id", async (req, res) => {
     });
 });
 
-//cadastro de médicos
+//Cadastro de médicos
 app.post("/medico", async (req, res) => {
-    const medico_id = Math.floor(Math.random() * 10000);
+    const medico_id = Math.floor(Math.random() * 10000);//Gera ID para o médico
     const crm = req.body.crm;
     const nome = req.body.nome;
 
@@ -83,6 +79,7 @@ app.post("/medico", async (req, res) => {
     });
 });
 
+//Lista todos os médicos cadastrados
 app.get("/medico", (req, res) => {
     pool.query("SELECT * FROM tb_medico", (err, results, fields) => {
         res.json(results);
@@ -90,6 +87,7 @@ app.get("/medico", (req, res) => {
     });
 });
 
+//Consulta de médico por ID
 app.get("/medico/:id", (req, res) => {
     var medico_id = req.params.id;
     pool.query("SELECT * FROM tb_medico WHERE medico_id=" + mysql.escape(medico_id), (err, results, fields) => {

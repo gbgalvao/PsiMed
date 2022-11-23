@@ -13,21 +13,16 @@ const pool = mysql.createPool({
   database: DB_DATABASE,
   user: DB_USER,
   password: DB_PASSWORD,
-  //se todas as conexões estiverem ocupadas, novos solicitantes esperam numa fila
-  //se configurado com false, causa um erro quando recebe requisições e todas
-  //as conexões estão ocupadas
   waitForConnections: true,
-  //no máximo 10 conexões. Elas são abertas sob demanda e não no momento de
-  //construção do pool
   connectionLimit: 10,
-  //quantos solicitantes podem aguardar na fila? 0 significa que não há limite
   queueLimit: 0
 });
 
-app.post("/consulta", async (req, res) => {
-  var consulta_id = Math.floor(Math.random() * 10000);
+//Input de consultas
+app.post("/paciente/:id/consulta", async (req, res) => {
+  var consulta_id = Math.floor(Math.random() * 10000);//Gera ID da consulta
   var medico_id = req.body.medico_id;
-  var paciente_id = req.body.paciente_id;
+  var paciente_id = req.params.id;
   var dataCon = req.body.dataCon;
   var hora = req.body.hora;
 
@@ -48,6 +43,24 @@ app.post("/consulta", async (req, res) => {
     });
 });
 
+app.post("/consulta/:idCon", async (req, res) => {
+  var consulta_id = req.params.idCon;
+  var obs = req.body.obs;
+
+  const sql = "INSERT INTO tb_consulta obs VALUES ? WHERE consulta_id=" + mysql.escape(consulta_id);
+    pool.query(sql, obs, (err, results, fields) => {
+      res.json(results);
+    });
+
+  await axios.post("http://localhost:1000/eventos", {
+        tipo: "ConsultaInserida",
+        dados: {   
+        obs
+        },
+    });
+}); 
+
+//Requisição de todas as consultas
 app.get("/consulta", (req, res) => {
   pool.query("SELECT * FROM tb_consulta", (err, results, fields) => {
     res.json(results);
@@ -55,9 +68,10 @@ app.get("/consulta", (req, res) => {
   });
 });
 
-app.get("/consulta/:id", async (req, res) => {
-  var consulta_id = req.params.id;
-  pool.query("SELECT * FROM tb_consulta WHERE consulta_id=" + mysql.escape(consulta_id), (err, results, fields) => {
+//Consultas por ID de usuário
+app.get("/paciente/:id/consulta", async (req, res) => {
+  var paciente_id = req.params.id
+  pool.query("SELECT * FROM tb_consulta WHERE paciente_id=" + mysql.escape(paciente_id), (err, results, fields) => {
       res.json(results);
       console.log(results);
   });
@@ -68,5 +82,5 @@ app.post("/eventos", (req, res) => {
   res.status(200).send({ msg: "ok" });
 });
 
-const porta = 7000;
+const porta = 5000;
 app.listen(porta, () => console.log(`Executando. Porta ${porta}`));
